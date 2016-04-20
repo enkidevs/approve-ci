@@ -191,8 +191,14 @@ app.post('/', (req, res) => {
             console.log(commenters)
 
             const result = Object.keys(commenters).reduce((ret, commenter) => {
-              return ret + (commenters[commenter] > 0 ? 1 : -1)
-            })
+              if (commenters[commenter] > 0) {
+                return ret + 1
+              }
+              if (commenters[commenter] < 0) {
+                return ret - 1
+              }
+              return ret
+            }, 0)
 
             console.log(result)
 
