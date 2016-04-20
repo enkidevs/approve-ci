@@ -142,53 +142,55 @@ app.post('/', (req, res) => {
           repo: GITHUB_REPO,
           number: event.issue.number,
           per_page: 100
-        }, (err, response) => {
+        }, (err, comments) => {
           if (err) {
             console.error(err)
             return res.status(500).send(err)
-          }
-
-          const result = response.reduce((ret, comment) => {
-            if (config.approvalStrings.some((str) => {
-              return comment.body.includes(str)
-            })) return ret + 1
-
-            if (config.disapprovalStrings.some((str) => {
-              return comment.body.includes(str)
-            })) return ret - 1
-
-            return ret
-          }, 0)
-
-          let state, description
-          if (result > config.approvalCount) {
-            state = 'success'
-            description = 'The pull-request was approved'
-          } else if (result < 0) {
-            state = 'failure'
-            description = 'The pull-request needs more work'
-          } else {
-            return res.status(200).send({success: true})
           }
 
           gh.pullRequests.get({
             user: GITHUB_ORG,
             repo: GITHUB_REPO,
             number: event.issue.number
-          }, (err, response) => {
+          }, (err, pr) => {
             if (err) {
               console.error(err)
               return res.status(500).send(err)
             }
 
+            const result = comments
+              .filter((comment) => comment.user.login !== pr.user.login)
+              .reduce((ret, comment) => {
+                if (config.approvalStrings.some((str) => {
+                  return comment.body.includes(str)
+                })) return ret + 1
+
+                if (config.disapprovalStrings.some((str) => {
+                  return comment.body.includes(str)
+                })) return ret - 1
+
+                return ret
+              }, 0)
+
+            let state, description
+            if (result > config.approvalCount) {
+              state = 'success'
+              description = 'The pull-request was approved'
+            } else if (result < 0) {
+              state = 'failure'
+              description = 'The pull-request needs more work'
+            } else {
+              return res.status(200).send({success: true})
+            }
+
             gh.statuses.create({
               user: GITHUB_ORG,
               repo: GITHUB_REPO,
-              sha: response.head.sha,
+              sha: pr.head.sha,
               state,
               context: config.name,
               description
-            }, (err, response) => {
+            }, (err) => {
               if (err) {
                 console.error(err)
                 return res.status(500).send(err)
