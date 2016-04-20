@@ -111,8 +111,51 @@ app.post('/', (req, res) => {
           headers: headers
         }, (err, response) => {
           if (err) console.error(err)
-          console.log(response)
-          console.log(config)
+
+          const result = response.reduce((ret, comment) => {
+            if (config.approvalStrings.some((str) => {
+              return comment.contains(str)
+            })) return ret + 1
+
+            if (config.disapprovalStrings.some((str) => {
+              return comment.contains(str)
+            })) return ret - 1
+
+            return ret
+          }, 0)
+
+          var status, message
+          if (result > config.approvalCount) {
+            status = 'success'
+            message = 'The pull-request was approved'
+          } else if (result < 0) {
+            status = 'failure'
+            message = 'The pull-request needs more work'
+          } else {
+            return
+          }
+
+          gh.pullRequests.get({
+            user: GITHUB_ORG,
+            repo: GITHUB_REPO,
+            number: event.issue.number,
+            headers: headers
+          }, (err, response) => {
+            if (err) console.error(err)
+
+            gh.statuses.create({
+              user: GITHUB_ORG,
+              repo: GITHUB_REPO,
+              sha: response.head.sha,
+              state: status,
+              context: 'approval-ci',
+              description: message,
+              headers: headers
+            }, (err, response) => {
+              if (err) console.error(err)
+              console.log(response)
+            })
+          })
         })
       }
       return
