@@ -4,6 +4,8 @@ node_js:
 cache:
   directories:
   - node_modules
+before_deploy:
+  - make build
 deploy:
   skip_cleanup: true
   provider: heroku
