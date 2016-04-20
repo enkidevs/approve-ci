@@ -87,13 +87,14 @@ app.post('/', (req, res) => {
         repo: GITHUB_REPO,
         sha: event.pull_request.head.sha,
         state: 'pending',
+        context: 'approval-ci',
         description: 'Waiting for approval',
         headers: headers
       }, (err, response) => {
         if (err) console.error(err)
         console.log(response)
       })
-      break
+      return
   }
 
   // Issue Comment
@@ -102,7 +103,7 @@ app.post('/', (req, res) => {
     case 'edited':
       // Fetch all comments from PR
       if (event.issue.pull_request) {
-        gh.pullRequests.getComments({
+        gh.issues.getComments({
           user: GITHUB_ORG,
           repo: GITHUB_REPO,
           number: event.issue.number,
@@ -114,10 +115,7 @@ app.post('/', (req, res) => {
           console.log(config)
         })
       }
-      break
-
-    default:
-      console.log('Unknown comment action')
+      return
   }
 })
 
