@@ -3,6 +3,8 @@ import bodyParser from 'body-parser'
 import {decode} from 'base-64'
 import GithubAPI from 'github'
 
+import {getHooks, createHook} from './githubWrapper'
+
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
 if (!GITHUB_TOKEN || !GITHUB_REPO || !GITHUB_ORG || !URL) {
@@ -26,53 +28,15 @@ const defaultConfig = {
 
 var config = defaultConfig
 
-const headers = {
-  'user-agent': 'approve-ci-bot'
-}
-
-const gh = new GithubAPI({
-  version: '3.0.0',
-  debug: true,
-  protocol: 'https',
-  host: 'api.github.com',
-  pathPrefix: '',
-  timeout: 5000,
-  headers
-})
-
-gh.authenticate({
-  type: 'oauth',
-  token: GITHUB_TOKEN
-})
-
-gh.repos.getHooks({
-  user: GITHUB_ORG,
-  repo: GITHUB_REPO
-}, (err, response) => {
-  if (err) console.error(err)
-
+getHooks().then((hooks) => {
   // Existing hook?
-  const hook = (response || []).find((hook) => hook.config.url === URL)
+  const hook = (hooks || []).find((hook) => hook.config.url === URL)
   if (hook) {
-    return
+    throw new Error('already defined')
   }
-
-  // Create a hook
-  gh.repos.createHook({
-    user: GITHUB_ORG,
-    repo: GITHUB_REPO,
-    name: 'web',
-    active: true,
-    config: {
-      url: URL,
-      content_type: 'json'
-    },
-    events: ['pull_request', 'issue_comment']
-  }, (err, response) => {
-    if (err) return console.error(err)
-    console.log(response)
-  })
-})
+  return URL
+}).then(createHook)
+  .catch((err) => console.log(err))
 
 // Retrieve configuration from repository
 // This is stored in .approve-ci found in the root directory
