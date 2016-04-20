@@ -165,14 +165,14 @@ app.post('/', (req, res) => {
                 if (config.approvalStrings.some((str) => comment.body.includes(str))) {
                   console.log('+1')
                   return {
-                    ret,
+                    ...ret,
                     [comment.user.id]: (ret[comment.user.id] || 0) + 1
                   }
                 }
                 if (config.disapprovalStrings.some((str) => comment.body.includes(str))) {
                   console.log('-1')
                   return {
-                    ret,
+                    ...ret,
                     [comment.user.id]: (ret[comment.user.id] || 0) - 1
                   }
                 }
