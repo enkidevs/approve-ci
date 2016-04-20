@@ -89,8 +89,11 @@ app.post('/', (req, res) => {
         context: config.name,
         description: 'Waiting for approval'
       }, (err, response) => {
-        if (err) console.error(err)
-        console.log('Set status of new PR to \'pending\'')
+        if (err) {
+          console.error(err)
+          return res.status(500).send(err)
+        }
+        return res.status(200).send({success: true})
       })
       return
   }
@@ -99,6 +102,7 @@ app.post('/', (req, res) => {
   switch (event.action) {
     case 'created':
     case 'edited':
+    case 'deleted':
       // Fetch all comments from PR
       if (event.issue.pull_request) {
         gh.issues.getComments({
@@ -107,7 +111,10 @@ app.post('/', (req, res) => {
           number: event.issue.number,
           per_page: 100
         }, (err, response) => {
-          if (err) console.error(err)
+          if (err) {
+            console.error(err)
+            return res.status(500).send(err)
+          }
 
           const result = response.reduce((ret, comment) => {
             if (config.approvalStrings.some((str) => {
@@ -129,7 +136,7 @@ app.post('/', (req, res) => {
             state = 'failure'
             description = 'The pull-request needs more work'
           } else {
-            return
+            return res.status(200).send({success: true})
           }
 
           gh.pullRequests.get({
@@ -137,7 +144,10 @@ app.post('/', (req, res) => {
             repo: GITHUB_REPO,
             number: event.issue.number
           }, (err, response) => {
-            if (err) console.error(err)
+            if (err) {
+              console.error(err)
+              return res.status(500).send(err)
+            }
 
             gh.statuses.create({
               user: GITHUB_ORG,
@@ -147,14 +157,19 @@ app.post('/', (req, res) => {
               context: config.name,
               description
             }, (err, response) => {
-              if (err) console.error(err)
+              if (err) {
+                console.error(err)
+                return res.status(500).send(err)
+              }
               console.log('Set status of new PR to \'' + state + '\'')
+              return res.status(200).send({success: true})
             })
           })
         })
       }
       return
   }
+  return res.status(200).send({success: true})
 })
 
 // Start server
