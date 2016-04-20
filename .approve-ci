@@ -1,6 +1,6 @@
 {
   "name": "approve-test",
   "approvalCount": 1,
-  "approvalStrings": ["👍", ":+1:", ":thumbsup:"],
-  "disapprovalStrings": ["👎", ":-1:", ":thumbsdown:"]
+  "approvalStrings": ["%F0%9F%91%8D", ":+1:", ":thumbsup:"],
+  "disapprovalStrings": ["%F0%9F%91%8E", ":-1:", ":thumbsdown:"]
 }
