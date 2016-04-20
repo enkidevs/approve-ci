@@ -1,0 +1,21 @@
+{
+  "name": "approve-ci",
+  "version": "0.1.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enkidevs/approve-ci.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enkidevs/approve-ci/issues"
+  },
+  "homepage": "https://github.com/enkidevs/approve-ci#readme",
+  "devDependencies": {
+    "@mathieudutour/js-fatigue": "1.0.4"
+  }
+}
