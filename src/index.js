@@ -162,13 +162,14 @@ app.post('/', (req, res) => {
               .filter((comment) => comment.user.login !== pr.user.login)
               .reduce((ret, comment) => {
                 console.log(comment.body)
-                if (config.approvalStrings.some((str) => {
-                  return comment.body.includes(str)
-                })) return ret + 1
-
-                if (config.disapprovalStrings.some((str) => {
-                  return comment.body.includes(str)
-                })) return ret - 1
+                if (config.approvalStrings.some((str) => comment.body.includes(str))) {
+                  console.log('+1')
+                  return ret + 1
+                }
+                if (config.disapprovalStrings.some((str) => comment.body.includes(str))) {
+                  console.log('-1')
+                  return ret - 1
+                }
 
                 return ret
               }, 0)
@@ -176,7 +177,7 @@ app.post('/', (req, res) => {
             console.log(result)
 
             let state, description
-            if (result > config.approvalCount) {
+            if (result >= config.approvalCount) {
               state = 'success'
               description = 'The pull-request was approved'
             } else if (result < 0) {
