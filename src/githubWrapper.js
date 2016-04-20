@@ -36,7 +36,7 @@ export function getHooks () {
     gh.repos.getHooks({
       user: GITHUB_ORG,
       repo: GITHUB_REPO
-    }, responseHandler)
+    }, responseHandler(resolve, reject))
   })
 }
 
@@ -53,7 +53,7 @@ export function createHook (url) {
         content_type: 'json'
       },
       events: ['pull_request', 'issue_comment']
-    }, responseHandler)
+    }, responseHandler(resolve, reject))
   })
 }
 
@@ -64,7 +64,7 @@ export function getConfig () {
       repo: GITHUB_REPO,
       headers,
       path: '.approve-ci'
-    }, responseHandler)
+    }, responseHandler(resolve, reject))
   })
 }
 
@@ -78,7 +78,7 @@ export function setState ({sha, name, state, description}) {
       state,
       description,
       context: name
-    }, responseHandler)
+    }, responseHandler(resolve, reject))
   })
 }
 
@@ -89,7 +89,7 @@ export function getComments (number) {
       repo: GITHUB_REPO,
       number,
       per_page: 100
-    }, responseHandler)
+    }, responseHandler(resolve, reject))
   })
 }
 
@@ -99,6 +99,6 @@ export function getPullRequest (number) {
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
       number
-    }, responseHandler)
+    }, responseHandler(resolve, reject))
   })
 }
