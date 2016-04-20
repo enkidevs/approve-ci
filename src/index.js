@@ -161,6 +161,7 @@ app.post('/', (req, res) => {
             const result = comments
               .filter((comment) => comment.user.login !== pr.user.login)
               .reduce((ret, comment) => {
+                console.log(comment.body)
                 if (config.approvalStrings.some((str) => {
                   return comment.body.includes(str)
                 })) return ret + 1
@@ -171,6 +172,8 @@ app.post('/', (req, res) => {
 
                 return ret
               }, 0)
+
+            console.log(result)
 
             let state, description
             if (result > config.approvalCount) {
