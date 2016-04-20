@@ -93,6 +93,8 @@ gh.repos.getContent({
       console.error(err)
     }
   }
+  console.log('Approving comments containing:', config.approvalStrings)
+  console.log('Disapproving comments containing:', config.disapprovalStrings)
 })
 
 const app = express()
