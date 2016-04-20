@@ -70,14 +70,13 @@ app.post('/', (req, res) => {
     case 'deleted':
       // Fetch all comments from PR
       if (event.issue.pull_request) {
-        Promise.all([
+        return Promise.all([
           getComments(event.issue.number),
           getPullRequest(event.issue.number)
         ]).then(checkApproved)
           .then(setState)
           .catch((err) => res.status(500).send(err))
       }
-      return
   }
   return res.status(200).send({success: true})
 })
