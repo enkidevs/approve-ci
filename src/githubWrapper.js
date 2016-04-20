@@ -21,7 +21,7 @@ gh.authenticate({
   token: GITHUB_TOKEN
 })
 
-function reponseHandler (resolve, reject) {
+function responseHandler (resolve, reject) {
   return function (err, response) {
     if (err) {
       return reject(err)
@@ -36,7 +36,7 @@ export function getHooks () {
     gh.repos.getHooks({
       user: GITHUB_ORG,
       repo: GITHUB_REPO
-    }, reponseHandler)
+    }, responseHandler)
   })
 }
 
@@ -45,6 +45,7 @@ export function createHook (url) {
     gh.repos.createHook({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
+      headers,
       name: 'web',
       active: true,
       config: {
@@ -52,6 +53,51 @@ export function createHook (url) {
         content_type: 'json'
       },
       events: ['pull_request', 'issue_comment']
-    }, reponseHandler)
+    }, responseHandler)
+  })
+}
+
+export function getConfig () {
+  return new Promise((resolve, reject) => {
+    gh.repos.getHooks({
+      user: GITHUB_ORG,
+      repo: GITHUB_REPO,
+      headers,
+      path: '.approve-ci'
+    }, responseHandler)
+  })
+}
+
+export function setState ({sha, name, state, description}) {
+  return new Promise((resolve, reject) => {
+    gh.statuses.create({
+      user: GITHUB_ORG,
+      repo: GITHUB_REPO,
+      sha,
+      state,
+      description,
+      context: name
+    }, responseHandler)
+  })
+}
+
+export function getComments (number) {
+  return new Promise((resolve, reject) => {
+    gh.statuses.create({
+      user: GITHUB_ORG,
+      repo: GITHUB_REPO,
+      number,
+      per_page: 100
+    }, responseHandler)
+  })
+}
+
+export function getPullRequest (number) {
+  return new Promise((resolve, reject) => {
+    gh.pullRequests.get({
+      user: GITHUB_ORG,
+      repo: GITHUB_REPO,
+      number
+    }, responseHandler)
   })
 }

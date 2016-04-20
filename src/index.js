@@ -1,9 +1,9 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import {decode} from 'base-64'
-import GithubAPI from 'github'
 
-import {getHooks, createHook} from './githubWrapper'
+import {getHooks, createHook, getConfig, setState,
+  getComments, getPullRequest} from './githubWrapper'
 
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
@@ -28,8 +28,9 @@ const defaultConfig = {
 
 var config = defaultConfig
 
+// Existing hook?
+// If not, create one
 getHooks().then((hooks) => {
-  // Existing hook?
   const hook = (hooks || []).find((hook) => hook.config.url === URL)
   if (hook) {
     throw new Error('already defined')
@@ -40,32 +41,22 @@ getHooks().then((hooks) => {
 
 // Retrieve configuration from repository
 // This is stored in .approve-ci found in the root directory
-gh.repos.getContent({
-  user: GITHUB_ORG,
-  repo: GITHUB_REPO,
-  path: '.approve-ci',
-  headers
-}, (err, response) => {
-  if (err) console.error(err)
-  if (response) {
-    try {
-      var userConfig = JSON.parse(decode(response.content))
-      Object.keys(userConfig).forEach((key) => {
-        if (Array.isArray(userConfig[key])) {
-          config[key] = userConfig[key].map((item) => decodeURIComponent(item))
-        } else if (typeof userConfig[key] === 'string') {
-          config[key] = decodeURIComponent(userConfig[key])
-        } else {
-          config[key] = userConfig[key]
-        }
-      })
-    } catch (e) {
-      console.error(err)
-    }
+getConfig().then((config) => {
+  if (config) {
+    var userConfig = JSON.parse(decode(config.content))
+    Object.keys(userConfig).forEach((key) => {
+      if (Array.isArray(userConfig[key])) {
+        config[key] = userConfig[key].map((item) => decodeURIComponent(item))
+      } else if (typeof userConfig[key] === 'string') {
+        config[key] = decodeURIComponent(userConfig[key])
+      } else {
+        config[key] = userConfig[key]
+      }
+    })
   }
   console.log('Approving comments containing:', config.approvalStrings)
   console.log('Disapproving comments containing:', config.disapprovalStrings)
-})
+}).catch((err) => console.error(err))
 
 const app = express()
 app.use(bodyParser.json())
@@ -85,21 +76,14 @@ app.post('/', (req, res) => {
     case 'reopened':
     case 'synchronize':
       // Set status to 'pending'
-      gh.statuses.create({
-        user: GITHUB_ORG,
-        repo: GITHUB_REPO,
+      return setState({
         sha: event.pull_request.head.sha,
+        name: config.name,
         state: 'pending',
-        context: config.name,
         description: 'Waiting for approval'
-      }, (err, response) => {
-        if (err) {
-          console.error(err)
-          return res.status(500).send(err)
-        }
-        return res.status(200).send({success: true})
-      })
-      return
+      }).then((response) => {
+        res.status(200).send({success: true})
+      }).catch((err) => res.status(500).send(err))
   }
 
   // Issue Comment
@@ -109,91 +93,58 @@ app.post('/', (req, res) => {
     case 'deleted':
       // Fetch all comments from PR
       if (event.issue.pull_request) {
-        gh.issues.getComments({
-          user: GITHUB_ORG,
-          repo: GITHUB_REPO,
-          number: event.issue.number,
-          per_page: 100
-        }, (err, comments) => {
-          if (err) {
-            console.error(err)
-            return res.status(500).send(err)
+        Promise.all([getComments(event.issue.number), getPullRequest(event.issue.number)]).then(([comments, pr]) => {
+          const commenters = comments
+            .filter((comment) => comment.user.login !== pr.user.login)
+            .reduce((ret, comment) => {
+              console.log(comment.body)
+              if (config.approvalStrings.some((str) => comment.body.includes(str))) {
+                console.log('+1')
+                return {
+                  ...ret,
+                  [comment.user.id]: (ret[comment.user.id] || 0) + 1
+                }
+              }
+              if (config.disapprovalStrings.some((str) => comment.body.includes(str))) {
+                console.log('-1')
+                return {
+                  ...ret,
+                  [comment.user.id]: (ret[comment.user.id] || 0) - 1
+                }
+              }
+
+              return ret
+            }, {})
+
+          const result = Object.keys(commenters).reduce((ret, commenter) => {
+            if (commenters[commenter] > 0) {
+              return ret + 1
+            }
+            if (commenters[commenter] < 0) {
+              return ret - 1
+            }
+            return ret
+          }, 0)
+
+          let state, description
+          if (result >= config.approvalCount) {
+            state = 'success'
+            description = 'The pull-request was approved'
+          } else if (result < 0) {
+            state = 'failure'
+            description = 'The pull-request needs more work'
+          } else {
+            return res.status(200).send({success: true})
           }
 
-          gh.pullRequests.get({
-            user: GITHUB_ORG,
-            repo: GITHUB_REPO,
-            number: event.issue.number
-          }, (err, pr) => {
-            if (err) {
-              console.error(err)
-              return res.status(500).send(err)
-            }
-
-            const commenters = comments
-              .filter((comment) => comment.user.login !== pr.user.login)
-              .reduce((ret, comment) => {
-                console.log(comment.body)
-                if (config.approvalStrings.some((str) => comment.body.includes(str))) {
-                  console.log('+1')
-                  return {
-                    ...ret,
-                    [comment.user.id]: (ret[comment.user.id] || 0) + 1
-                  }
-                }
-                if (config.disapprovalStrings.some((str) => comment.body.includes(str))) {
-                  console.log('-1')
-                  return {
-                    ...ret,
-                    [comment.user.id]: (ret[comment.user.id] || 0) - 1
-                  }
-                }
-
-                return ret
-              }, {})
-
-            console.log(commenters)
-
-            const result = Object.keys(commenters).reduce((ret, commenter) => {
-              if (commenters[commenter] > 0) {
-                return ret + 1
-              }
-              if (commenters[commenter] < 0) {
-                return ret - 1
-              }
-              return ret
-            }, 0)
-
-            console.log(result)
-
-            let state, description
-            if (result >= config.approvalCount) {
-              state = 'success'
-              description = 'The pull-request was approved'
-            } else if (result < 0) {
-              state = 'failure'
-              description = 'The pull-request needs more work'
-            } else {
-              return res.status(200).send({success: true})
-            }
-
-            gh.statuses.create({
-              user: GITHUB_ORG,
-              repo: GITHUB_REPO,
-              sha: pr.head.sha,
-              state,
-              context: config.name,
-              description
-            }, (err) => {
-              if (err) {
-                console.error(err)
-                return res.status(500).send(err)
-              }
-              console.log('Set status of new PR to \'' + state + '\'')
-              return res.status(200).send({success: true})
-            })
-          })
-        })
+          // Set the status
+          return {
+            sha: pr.head.sha,
+            name: config.name,
+            state,
+            description
+          }
+        }).then(setState).catch((err) => res.status(500).send(err))
       }
       return
   }
