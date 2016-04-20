@@ -1,6 +1,15 @@
 language: node_js
 node_js:
-- "5.5"
+- '5.5'
 cache:
   directories:
   - node_modules
+deploy:
+  skip_cleanup: true
+  provider: heroku
+  api_key:
+    secure: kOBtyeBNa1gkUyEPb2UiaedZ0vDtyKJJDqZVyBjy3l3vlaRhKhEsaBB4cVBMEQz4XjZFvwxf1D+DUEyF9tb9bJkjNyjUGMmnc2JCPtSYikYpXMDlcCTCBOh77ikhkcrPL6fmSo/Fxlb684dm0A+Dxo9J/PzQxdXdjL9dK2zVI86x/+QsXXQgIdy/f44l9e2CMf5VAtIN3iaiLuTc0E1I+8k6/yqoRHBlfCv2i59LLabuDT4/HxpuQBqmc4k1i+SHin0CXQEefmCd1UP06RU2+5mBm+anNGCGGZFUaDFRcd4mJZehE9R7fy887L+sFxVZOuSmK93tWNY2fE1CGUkKO57NPs4geG68h3HpiA7gkN0mLKTRCY9FGZDR2iLfkqERidEbvIQlZtSEEgU7epH/JWXMW+D7n0gLHlXvcTp0UjUxVT5ujbWQfHDhu1f5au6z2k4zI+0PoTa90HqCxILhXTs4hyjEMxCmZ84JQKkg+b5Tr5wpbd1aRRCuJmtRynRLXRkZyA2uUhQ2fZCqyedOttQLSsZYMbTfSP92leZgtNVPaayz6vaHEFfZSel6Hbm7WhZHHzFwday43BrMi+ZIZeVnrpaayubVL94MDQv/DxEPRQ2tIGkGP8hc+6/z+4+X3IGUnrt3YdSM0Dfubxpoqn4gJhOX0d/0/a48DAD3nX8=
+  app: approve-ci
+  on:
+    repo: enkidevs/approve-ci
+    branch: master
