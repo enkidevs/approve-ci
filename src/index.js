@@ -1,4 +1,5 @@
 import express from 'express'
+import bodyParser from 'body-parser'
 import GithubAPI from 'github'
 
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
@@ -58,6 +59,7 @@ gh.repos.getHooks({
 })
 
 const app = express()
+app.use(bodyParser.json())
 
 // Default app-alive message
 app.get('/', (req, res) => {
