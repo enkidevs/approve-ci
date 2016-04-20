@@ -5,6 +5,18 @@ import GithubAPI from 'github'
 
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
+if (!GITHUB_TOKEN || !GITHUB_REPO || !GITHUB_ORG || !URL) {
+  console.error('The ci was started without env variables')
+  console.error('To get started:')
+  if (!GITHUB_TOKEN) {
+    console.error('* Visit https://github.com/settings/tokens')
+    console.error('* Create a new token with the repo rights')
+  }
+  console.error('* Run the following command:')
+  console.error('GITHUB_TOKEN=insert_github_token_here GITHUB_REPO=insert_github_repo_here GITHUB_ORG=insert_github_username_here URL=insert_url_here npm start')
+  process.exit(1)
+}
+
 const defaultConfig = {
   name: 'approve-ci',
   approvalCount: 1,
@@ -40,13 +52,9 @@ gh.repos.getHooks({
   if (err) console.error(err)
 
   // Existing hook?
-  if (response) {
-    var hook = response.find((hook) => {
-      return (hook.config.url === URL)
-    })
-    if (hook) {
-      return
-    }
+  const hook = (response || []).find((hook) => hook.config.url === URL)
+  if (hook) {
+    return
   }
 
   // Create a hook
