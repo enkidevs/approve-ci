@@ -110,11 +110,11 @@ app.post('/', (req, res) => {
 
           const result = response.reduce((ret, comment) => {
             if (config.approvalStrings.some((str) => {
-              return comment.includes(str)
+              return (comment.indexOf(str) > -1)
             })) return ret + 1
 
             if (config.disapprovalStrings.some((str) => {
-              return comment.includes(str)
+              return (comment.indexOf(str) > -1)
             })) return ret - 1
 
             return ret
