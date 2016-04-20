@@ -1,7 +1,7 @@
 import express from 'express'
 import GithubAPI from 'github'
 
-const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
+const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG} = process.env
 
 var headers = {
   'user-agent': 'approve-ci-bot'
@@ -30,6 +30,8 @@ gh.getHooks({
   headers: headers
 }, (response) => {
   console.log(response)
+
+  // TODO - check whether hooks exist
 })
 
 const app = express()
