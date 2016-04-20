@@ -49,6 +49,7 @@ app.get('/', (req, res) => {
 // Handler hook event
 app.post('/', (req, res) => {
   var event = req.body
+  console.log(event)
 
   // Pull Request
   switch (event.action) {
@@ -72,7 +73,7 @@ app.post('/', (req, res) => {
     case 'edited':
     case 'deleted':
       // Fetch all comments from PR
-      if (event.issue.pull_request) {
+      if ((event.issue || {}).pull_request) { // check if it's a comment on a PR
         return Promise.all([
           getComments(event.issue.number),
           getPullRequest(event.issue.number)
