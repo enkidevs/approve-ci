@@ -69,6 +69,7 @@ export function getConfig () {
 }
 
 export function setState ({sha, name, state, description}) {
+  console.log({sha, name, state, description})
   return new Promise((resolve, reject) => {
     gh.statuses.create({
       user: GITHUB_ORG,
