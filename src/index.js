@@ -60,12 +60,12 @@ gh.repos.getHooks({
 const app = express()
 
 // Default app-alive message
-app.get('/', (res, req) => {
+app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
 
 // Handler hook event
-app.post('/', (res, req) => {
+app.post('/', (req, res) => {
   console.log(req.body)
 })
 
