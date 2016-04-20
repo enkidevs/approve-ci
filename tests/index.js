@@ -29,5 +29,10 @@ test('Check configs merge', t => {
 })
 
 test('Check request is approved', t => {
-  return t.truthy(checkApproved([comments, pr]))
+  return t.deepEqual(checkApproved([comments, pr]), {
+    sha: 'a085778b8f028205881c0bdbfc3772edc5563a3d',
+    name: 'approve-test',
+    state: 'failure',
+    description: 'The pull request needs more work'
+  })
 })
