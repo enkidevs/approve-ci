@@ -8,9 +8,7 @@ var headers = {
 }
 
 var gh = new GithubAPI({
-  // required
   version: '3.0.0',
-  // optional
   debug: true,
   protocol: 'https',
   host: 'api.github.com',
@@ -24,7 +22,9 @@ gh.authenticate({
   token: GITHUB_TOKEN
 })
 
-gh.getHooks({
+var repo = gh.getRepo(GITHUB_ORG, GITHUB_REPO)
+
+repo.getHooks({
   user: GITHUB_ORG,
   repo: GITHUB_REPO,
   headers: headers
@@ -32,6 +32,9 @@ gh.getHooks({
   console.log(response)
 
   // TODO - check whether hooks exist
+  response.forEach((response) => {
+
+  });
 })
 
 const app = express()
