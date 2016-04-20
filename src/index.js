@@ -75,6 +75,9 @@ app.post('/', (req, res) => {
           getPullRequest(event.issue.number)
         ]).then(checkApproved)
           .then(setState)
+          .then((response) => {
+            res.status(200).send({success: true})
+          })
           .catch((err) => res.status(500).send(err))
       }
   }
