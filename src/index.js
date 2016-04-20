@@ -22,9 +22,7 @@ gh.authenticate({
   token: GITHUB_TOKEN
 })
 
-var repo = gh.getRepo(GITHUB_ORG, GITHUB_REPO)
-
-repo.getHooks({
+gh.repos.getHooks({
   user: GITHUB_ORG,
   repo: GITHUB_REPO,
   headers: headers
@@ -32,9 +30,6 @@ repo.getHooks({
   console.log(response)
 
   // TODO - check whether hooks exist
-  response.forEach((response) => {
-
-  });
 })
 
 const app = express()
