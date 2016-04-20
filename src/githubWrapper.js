@@ -27,7 +27,6 @@ function responseHandler (resolve, reject) {
       console.error(err)
       return reject(err)
     }
-    console.log(response)
     resolve(response)
   }
 }
@@ -75,7 +74,6 @@ export function getConfig () {
 export function setState ({sha, name, state, description}) {
   return new Promise((resolve, reject) => {
     console.log('set state')
-    console.log(sha, name, state, description)
     gh.statuses.create({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
@@ -91,7 +89,7 @@ export function setState ({sha, name, state, description}) {
 export function getComments (number) {
   return new Promise((resolve, reject) => {
     console.log('get comments')
-    gh.statuses.create({
+    gh.issues.getComments({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
       number,
