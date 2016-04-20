@@ -1,15 +1,18 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import {decode} from 'base-64'
 import GithubAPI from 'github'
 
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
-const config = {
+const defaultConfig = {
   name: 'approve-ci',
   approvalCount: 1,
   approvalStrings: ['👍'],
   disapprovalStrings: ['👎']
 }
+
+var config = defaultConfig
 
 const headers = {
   'user-agent': 'approve-ci-bot'
@@ -61,6 +64,27 @@ gh.repos.getHooks({
     if (err) return console.error(err)
     console.log(response)
   })
+})
+
+// Retrieve configuration from repository
+// This is stored in .approve-ci found in the root directory
+gh.repos.getContent({
+  user: GITHUB_ORG,
+  repo: GITHUB_REPO,
+  path: '.approve-ci',
+  headers
+}, (err, response) => {
+  if (err) console.error(err)
+  if (response) {
+    try {
+      var userConfig = JSON.parse(decode(response.content))
+      Object.keys(userConfig).forEach((key) => {
+        config[key] = userConfig[key]
+      })
+    } catch (e) {
+      console.error(err)
+    }
+  }
 })
 
 const app = express()

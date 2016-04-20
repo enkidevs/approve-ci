@@ -1,0 +1,6 @@
+{
+  "name": "approve-test",
+  "approvalCount": 1,
+  "approvalStrings": ["👍"],
+  "disapprovalStrings": ["👎"]
+}
