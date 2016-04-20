@@ -27,6 +27,7 @@ gh.repos.getHooks({
   repo: GITHUB_REPO,
   headers: headers
 }, (response) => {
+  // Existing hook?
   if (response) {
     var hook = response.find((hook) => {
       return (hook.config.url === URL)
@@ -56,10 +57,12 @@ gh.repos.getHooks({
 
 const app = express()
 
+// Default app-alive message
 app.get('/', (res, req) => {
   res.send('Hello, world!')
 })
 
+// Handler hook event
 app.post('/', (res, req) => {
-  // TODO
+  console.log(req.body)
 })
