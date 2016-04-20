@@ -17,5 +17,9 @@
   "homepage": "https://github.com/enkidevs/approve-ci#readme",
   "devDependencies": {
     "@mathieudutour/js-fatigue": "1.0.4"
+  },
+  "dependencies": {
+    "express": "^4.13.4",
+    "github": "^0.2.4"
   }
 }
