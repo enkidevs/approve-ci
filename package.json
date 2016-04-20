@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/enkidevs/approve-ci#readme",
   "devDependencies": {
-    "@mathieudutour/js-fatigue": "1.0.4"
+    "@mathieudutour/js-fatigue": "1.0.5"
   },
   "dependencies": {
     "base-64": "^0.1.0",
