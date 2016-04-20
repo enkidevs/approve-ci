@@ -6,7 +6,10 @@ const defaultConfig = {
   name: 'approve-ci',
   approvalCount: 1,
   approvalStrings: ['👍', ':+1:', ':thumbsup:'],
-  disapprovalStrings: ['👎', ':-1:', ':thumbsdown:']
+  disapprovalStrings: ['👎', ':-1:', ':thumbsdown:'],
+  approveString: 'The pull request was approved',
+  rejectString: 'The pull request needs more work',
+  pendingString: 'Waiting for approval'
 }
 
 const config = defaultConfig
@@ -71,10 +74,10 @@ export function checkApproved ([comments, pr]) {
   let state, description
   if (result >= config.approvalCount) {
     state = 'success'
-    description = 'The pull-request was approved'
+    description = config.approveString
   } else if (result < 0) {
     state = 'failure'
-    description = 'The pull-request needs more work'
+    description = config.rejectString
   } else {
     throw new Error('nothing to do')
   }

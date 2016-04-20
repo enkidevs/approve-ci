@@ -57,7 +57,7 @@ app.post('/', (req, res) => {
         sha: event.pull_request.head.sha,
         name: config.name,
         state: 'pending',
-        description: 'Waiting for approval'
+        description: config.pendingString
       }).then((response) => {
         res.status(200).send({success: true})
       }).catch((err) => res.status(500).send(err))

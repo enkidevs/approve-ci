@@ -21,7 +21,10 @@ test('Check configs merge', t => {
     name: 'approve-test',
     approvalCount: 1,
     approvalStrings: ['👍', ':+1:', ':thumbsup:'],
-    disapprovalStrings: ['👎', ':-1:', ':thumbsdown:']
+    disapprovalStrings: ['👎', ':-1:', ':thumbsdown:'],
+    approveString: 'The pull request was approved',
+    rejectString: 'The pull request needs more work',
+    pendingString: 'Waiting for approval'
   })
 })
 
