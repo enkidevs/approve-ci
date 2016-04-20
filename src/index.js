@@ -5,6 +5,7 @@ import GithubAPI from 'github'
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
 const config = {
+  approvalCount: 1,
   approvalStrings: ['👍'],
   disapprovalStrings: ['👎']
 }
@@ -100,6 +101,19 @@ app.post('/', (req, res) => {
     case 'created':
     case 'edited':
       // Fetch all comments from PR
+      if (event.issue.pull_request) {
+        gh.pullRequests.getComments({
+          user: GITHUB_ORG,
+          repo: GITHUB_REPO,
+          number: event.issue.number,
+          per_page: 100,
+          headers: headers
+        }, (err, response) => {
+          if (err) console.error(err)
+          console.log(response)
+          console.log(config)
+        })
+      }
       break
 
     default:
