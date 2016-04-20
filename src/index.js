@@ -26,7 +26,9 @@ gh.repos.getHooks({
   user: GITHUB_ORG,
   repo: GITHUB_REPO,
   headers: headers
-}, (response) => {
+}, (err, response) => {
+  if (err) console.error(err)
+
   // Existing hook?
   if (response) {
     var hook = response.find((hook) => {
