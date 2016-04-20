@@ -66,3 +66,10 @@ app.get('/', (res, req) => {
 app.post('/', (res, req) => {
   console.log(req.body)
 })
+
+// Start server
+app.set('port', process.env.PORT || 3000)
+
+app.listen(app.get('port'), () => {
+  console.log('Listening on port', app.get('port'))
+})
