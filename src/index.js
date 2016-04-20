@@ -32,7 +32,10 @@ getHooks()
 // This is stored in .approve-ci found in the root directory
 getConfig()
   .then(mergeConfigs)
-  .then((mergedConfig) => (config = mergedConfig))
+  .then((mergedConfig) => {
+    config = mergedConfig
+    console.log(config)
+  })
   .catch((err) => console.error(err))
 
 const app = express()

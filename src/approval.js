@@ -35,9 +35,6 @@ export function mergeConfigs (remoteConfig) {
       }
     })
   }
-  console.log('Approving comments containing:', config.approvalStrings)
-  console.log('Disapproving comments containing:', config.disapprovalStrings)
-
   return config
 }
 

@@ -8,7 +8,7 @@ const headers = {
 
 const gh = new GithubAPI({
   version: '3.0.0',
-  debug: true,
+  debug: false,
   protocol: 'https',
   host: 'api.github.com',
   pathPrefix: '',
@@ -24,15 +24,17 @@ gh.authenticate({
 function responseHandler (resolve, reject) {
   return function (err, response) {
     if (err) {
+      console.error(err)
       return reject(err)
     }
-
+    console.log(response)
     resolve(response)
   }
 }
 
 export function getHooks () {
   return new Promise((resolve, reject) => {
+    console.log('get hooks')
     gh.repos.getHooks({
       user: GITHUB_ORG,
       repo: GITHUB_REPO
@@ -42,6 +44,7 @@ export function getHooks () {
 
 export function createHook (url) {
   return new Promise((resolve, reject) => {
+    console.log('create hook')
     gh.repos.createHook({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
@@ -59,6 +62,7 @@ export function createHook (url) {
 
 export function getConfig () {
   return new Promise((resolve, reject) => {
+    console.log('get config')
     gh.repos.getContent({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
@@ -69,21 +73,24 @@ export function getConfig () {
 }
 
 export function setState ({sha, name, state, description}) {
-  console.log({sha, name, state, description})
   return new Promise((resolve, reject) => {
+    console.log('set state')
+    console.log(sha, name, state, description)
     gh.statuses.create({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
       sha,
       state,
       description,
-      context: name
+      context: name,
+      target_url: 'https://github.com/enkidevs/approve-ci'
     }, responseHandler(resolve, reject))
   })
 }
 
 export function getComments (number) {
   return new Promise((resolve, reject) => {
+    console.log('get comments')
     gh.statuses.create({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
@@ -95,6 +102,7 @@ export function getComments (number) {
 
 export function getPullRequest (number) {
   return new Promise((resolve, reject) => {
+    console.log('get pull request')
     gh.pullRequests.get({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
