@@ -6,5 +6,6 @@ https://developer.github.com/v3/repos/hooks/
 
 https://developer.github.com/v3/activity/events/types/#pullrequestreviewcommentevent
 
+https://github.com/mikedeboer/node-github
 
 https://github.com/facebook/mention-bot
