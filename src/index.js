@@ -4,6 +4,11 @@ import GithubAPI from 'github'
 
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
+const config = {
+  approvalStrings: ['👍'],
+  disapprovalStrings: ['👎']
+}
+
 var headers = {
   'user-agent': 'approve-ci-bot'
 }
@@ -68,7 +73,38 @@ app.get('/', (req, res) => {
 
 // Handler hook event
 app.post('/', (req, res) => {
-  console.log(req.body)
+  var event = req.body
+
+  // Pull Request
+  switch (event.action) {
+    case 'opened':
+    case 'reopened':
+    case 'synchronize':
+      // Set status to 'pending'
+      gh.statuses.create({
+        user: GITHUB_ORG,
+        repo: GITHUB_REPO,
+        sha: event.pull_request.head.sha,
+        state: 'pending',
+        description: 'Waiting for approval',
+        headers: headers
+      }, (err, response) => {
+        if (err) console.error(err)
+        console.log(response)
+      })
+      break
+  }
+
+  // Issue Comment
+  switch (event.action) {
+    case 'created':
+    case 'edited':
+      // Fetch all comments from PR
+      break
+
+    default:
+      console.log('Unknown comment action')
+  }
 })
 
 // Start server
