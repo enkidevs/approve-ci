@@ -50,7 +50,7 @@ gh.repos.getHooks({
       url: URL,
       content_type: 'json'
     },
-    events: ['pull_request', 'pull_request_review_comment'],
+    events: ['pull_request', 'issue_comment'],
     headers: headers
   }, (err, response) => {
     if (err) return console.error(err)
