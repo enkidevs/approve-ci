@@ -1,0 +1,18 @@
+{
+  "name": ".approve-ci",
+  "path": ".approve-ci",
+  "sha": "13e2ccaeb79b450201b467a8312397aabaa4d734",
+  "size": 162,
+  "url": "https://api.github.com/repos/enkidevs/approve-ci/contents/.approve-ci?ref=master",
+  "html_url": "https://github.com/enkidevs/approve-ci/blob/master/.approve-ci",
+  "git_url": "https://api.github.com/repos/enkidevs/approve-ci/git/blobs/13e2ccaeb79b450201b467a8312397aabaa4d734",
+  "download_url": "https://raw.githubusercontent.com/enkidevs/approve-ci/master/.approve-ci",
+  "type": "file",
+  "content": "ewogICJuYW1lIjogImFwcHJvdmUtdGVzdCIsCiAgImFwcHJvdmFsQ291bnQi\nOiAxLAogICJhcHByb3ZhbFN0cmluZ3MiOiBbIvCfkY0iLCAiOisxOiIsICI6\ndGh1bWJzdXA6Il0sCiAgImRpc2FwcHJvdmFsU3RyaW5ncyI6IFsi8J+RjiIs\nICI6LTE6IiwgIjp0aHVtYnNkb3duOiJdCn0K\n",
+  "encoding": "base64",
+  "_links": {
+    "self": "https://api.github.com/repos/enkidevs/approve-ci/contents/.approve-ci?ref=master",
+    "git": "https://api.github.com/repos/enkidevs/approve-ci/git/blobs/13e2ccaeb79b450201b467a8312397aabaa4d734",
+    "html": "https://github.com/enkidevs/approve-ci/blob/master/.approve-ci"
+  }
+}

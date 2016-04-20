@@ -59,7 +59,7 @@ export function createHook (url) {
 
 export function getConfig () {
   return new Promise((resolve, reject) => {
-    gh.repos.getHooks({
+    gh.repos.getContent({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
       headers,

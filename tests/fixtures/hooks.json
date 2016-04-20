@@ -1,0 +1,80 @@
+[
+  {
+    "type": "Repository",
+    "id": 8131823,
+    "name": "travis",
+    "active": true,
+    "events": [
+      "issue_comment",
+      "member",
+      "public",
+      "pull_request",
+      "push"
+    ],
+    "config": {
+      "domain": "notify.travis-ci.org",
+      "token": "********",
+      "user": "mathieudutour"
+    },
+    "updated_at": "2016-04-20T10:21:31Z",
+    "created_at": "2016-04-20T10:21:31Z",
+    "url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8131823",
+    "test_url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8131823/test",
+    "ping_url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8131823/pings",
+    "last_response": {
+      "code": 200,
+      "status": "active",
+      "message": "OK"
+    }
+  },
+  {
+    "type": "Repository",
+    "id": 8132355,
+    "name": "web",
+    "active": true,
+    "events": [
+      "issue_comment",
+      "pull_request",
+      "pull_request_review_comment"
+    ],
+    "config": {
+      "content_type": "json",
+      "insecure_ssl": "0",
+      "url": "https://approve-ci.herokuapp.com/"
+    },
+    "updated_at": "2016-04-20T11:51:39Z",
+    "created_at": "2016-04-20T11:26:22Z",
+    "url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8132355",
+    "test_url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8132355/test",
+    "ping_url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8132355/pings",
+    "last_response": {
+      "code": 200,
+      "status": "active",
+      "message": "OK"
+    }
+  },
+  {
+    "type": "Repository",
+    "id": 8135069,
+    "name": "web",
+    "active": true,
+    "events": [
+      "issue_comment",
+      "pull_request"
+    ],
+    "config": {
+      "content_type": "json",
+      "url": "http://approve-ci.herokuapp.com/"
+    },
+    "updated_at": "2016-04-20T15:29:01Z",
+    "created_at": "2016-04-20T15:29:01Z",
+    "url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8135069",
+    "test_url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8135069/test",
+    "ping_url": "https://api.github.com/repos/enkidevs/approve-ci/hooks/8135069/pings",
+    "last_response": {
+      "code": 200,
+      "status": "active",
+      "message": "OK"
+    }
+  }
+]
