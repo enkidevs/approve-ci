@@ -5,6 +5,7 @@ import GithubAPI from 'github'
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
 const config = {
+  name: 'approve-ci',
   approvalCount: 1,
   approvalStrings: ['👍'],
   disapprovalStrings: ['👎']
@@ -85,11 +86,11 @@ app.post('/', (req, res) => {
         repo: GITHUB_REPO,
         sha: event.pull_request.head.sha,
         state: 'pending',
-        context: 'approval-ci',
+        context: config.name,
         description: 'Waiting for approval'
       }, (err, response) => {
         if (err) console.error(err)
-        console.log(response)
+        console.log('Set status of new PR to \'pending\'')
       })
       return
   }
@@ -110,11 +111,11 @@ app.post('/', (req, res) => {
 
           const result = response.reduce((ret, comment) => {
             if (config.approvalStrings.some((str) => {
-              return (comment.indexOf(str) > -1)
+              return comment.body.includes(str)
             })) return ret + 1
 
             if (config.disapprovalStrings.some((str) => {
-              return (comment.indexOf(str) > -1)
+              return comment.body.includes(str)
             })) return ret - 1
 
             return ret
@@ -143,11 +144,11 @@ app.post('/', (req, res) => {
               repo: GITHUB_REPO,
               sha: response.head.sha,
               state,
-              context: 'approval-ci',
+              context: config.name,
               description
             }, (err, response) => {
               if (err) console.error(err)
-              console.log(response)
+              console.log('Set status of new PR to \'' + state + '\'')
             })
           })
         })
