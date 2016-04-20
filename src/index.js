@@ -10,18 +10,18 @@ const config = {
   disapprovalStrings: ['👎']
 }
 
-var headers = {
+const headers = {
   'user-agent': 'approve-ci-bot'
 }
 
-var gh = new GithubAPI({
+const gh = new GithubAPI({
   version: '3.0.0',
   debug: true,
   protocol: 'https',
   host: 'api.github.com',
   pathPrefix: '',
   timeout: 5000,
-  headers: headers
+  headers
 })
 
 gh.authenticate({
@@ -31,8 +31,7 @@ gh.authenticate({
 
 gh.repos.getHooks({
   user: GITHUB_ORG,
-  repo: GITHUB_REPO,
-  headers: headers
+  repo: GITHUB_REPO
 }, (err, response) => {
   if (err) console.error(err)
 
@@ -56,8 +55,7 @@ gh.repos.getHooks({
       url: URL,
       content_type: 'json'
     },
-    events: ['pull_request', 'issue_comment'],
-    headers: headers
+    events: ['pull_request', 'issue_comment']
   }, (err, response) => {
     if (err) return console.error(err)
     console.log(response)
@@ -88,8 +86,7 @@ app.post('/', (req, res) => {
         sha: event.pull_request.head.sha,
         state: 'pending',
         context: 'approval-ci',
-        description: 'Waiting for approval',
-        headers: headers
+        description: 'Waiting for approval'
       }, (err, response) => {
         if (err) console.error(err)
         console.log(response)
@@ -107,30 +104,29 @@ app.post('/', (req, res) => {
           user: GITHUB_ORG,
           repo: GITHUB_REPO,
           number: event.issue.number,
-          per_page: 100,
-          headers: headers
+          per_page: 100
         }, (err, response) => {
           if (err) console.error(err)
 
           const result = response.reduce((ret, comment) => {
             if (config.approvalStrings.some((str) => {
-              return comment.contains(str)
+              return comment.includes(str)
             })) return ret + 1
 
             if (config.disapprovalStrings.some((str) => {
-              return comment.contains(str)
+              return comment.includes(str)
             })) return ret - 1
 
             return ret
           }, 0)
 
-          var status, message
+          let state, description
           if (result > config.approvalCount) {
-            status = 'success'
-            message = 'The pull-request was approved'
+            state = 'success'
+            description = 'The pull-request was approved'
           } else if (result < 0) {
-            status = 'failure'
-            message = 'The pull-request needs more work'
+            state = 'failure'
+            description = 'The pull-request needs more work'
           } else {
             return
           }
@@ -138,8 +134,7 @@ app.post('/', (req, res) => {
           gh.pullRequests.get({
             user: GITHUB_ORG,
             repo: GITHUB_REPO,
-            number: event.issue.number,
-            headers: headers
+            number: event.issue.number
           }, (err, response) => {
             if (err) console.error(err)
 
@@ -147,10 +142,9 @@ app.post('/', (req, res) => {
               user: GITHUB_ORG,
               repo: GITHUB_REPO,
               sha: response.head.sha,
-              state: status,
+              state,
               context: 'approval-ci',
-              description: message,
-              headers: headers
+              description
             }, (err, response) => {
               if (err) console.error(err)
               console.log(response)
