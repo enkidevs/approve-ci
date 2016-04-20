@@ -158,21 +158,33 @@ app.post('/', (req, res) => {
               return res.status(500).send(err)
             }
 
-            const result = comments
+            const commenters = comments
               .filter((comment) => comment.user.login !== pr.user.login)
               .reduce((ret, comment) => {
                 console.log(comment.body)
                 if (config.approvalStrings.some((str) => comment.body.includes(str))) {
                   console.log('+1')
-                  return ret + 1
+                  return {
+                    ret,
+                    [comment.user.id]: (ret[comment.user.id] || 0) + 1
+                  }
                 }
                 if (config.disapprovalStrings.some((str) => comment.body.includes(str))) {
                   console.log('-1')
-                  return ret - 1
+                  return {
+                    ret,
+                    [comment.user.id]: (ret[comment.user.id] || 0) - 1
+                  }
                 }
 
                 return ret
-              }, 0)
+              }, {})
+
+            console.log(commenters)
+
+            const result = Object.keys(commenters).reduce((ret, commenter) => {
+              return ret + (commenters[commenter] > 0 ? 1 : -1)
+            })
 
             console.log(result)
 
