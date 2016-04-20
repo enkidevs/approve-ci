@@ -87,7 +87,13 @@ gh.repos.getContent({
     try {
       var userConfig = JSON.parse(decode(response.content))
       Object.keys(userConfig).forEach((key) => {
-        config[key] = decodeURIComponent(userConfig[key])
+        if (Array.isArray(userConfig[key])) {
+          config[key] = userConfig[key].map((item) => decodeURIComponent(item))
+        } else if (typeof userConfig[key] === 'string') {
+          config[key] = decodeURIComponent(userConfig[key])
+        } else {
+          config[key] = userConfig[key]
+        }
       })
     } catch (e) {
       console.error(err)
