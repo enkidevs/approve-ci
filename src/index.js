@@ -20,8 +20,8 @@ if (!GITHUB_TOKEN || !GITHUB_REPO || !GITHUB_ORG || !URL) {
 const defaultConfig = {
   name: 'approve-ci',
   approvalCount: 1,
-  approvalStrings: ['👍'],
-  disapprovalStrings: ['👎']
+  approvalStrings: ['👍', ':+1:', ':thumbsup:'],
+  disapprovalStrings: ['👎', ':-1:', ':thumbsdown:']
 }
 
 var config = defaultConfig
