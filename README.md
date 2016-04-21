@@ -8,7 +8,7 @@ Approve-ci monitors pull requests and checks for approval. Once the number of ap
 
 ## Deployment
 
-To run an approve-ci bot clone this repository, modify `.approve-ci` and deploy your application. You must set a GitHub organisation, repository and token as environment variables, along with the URL of your deployment.
+To run an approve-ci bot clone this repository, modify `.approve-ci` and deploy your application. You must set a GitHub organisation, repository and an API [token](https://github.com/settings/tokens) with `repo` rights as environment variables, along with the URL of your deployment.
 
 ```
   export GITHUB_TOKEN='f7c41472410cacded24090d24f70e98995d8dc55'
@@ -20,6 +20,10 @@ To run an approve-ci bot clone this repository, modify `.approve-ci` and deploy 
 Alternatively you can deploy the bot using Heroku by pressing the button below:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+GitHub allows you [protect branches](https://github.com/enkidevs/approve-ci/settings/branches) and to require specific tests to pass before pull requests can be merged. By setting this up and specifying the approve-ci bot (the name is defined in the configuration file, see the next section), approval is needed before a request can be merged.
+
+[![Protected branches](http://i.imgur.com/bpEb9nU.png)](https://github.com/enkidevs/approve-ci/settings/branches)
 
 ## Configuration
 
