@@ -21,7 +21,7 @@ Alternatively you can deploy the bot using Heroku by pressing the button below:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-GitHub allows you [protect branches](https://github.com/enkidevs/approve-ci/settings/branches) and to require specific tests to pass before pull requests can be merged. By setting this up and specifying the approve-ci bot (the name is defined in the configuration file, see the next section), approval is needed before a request can be merged.
+GitHub allows you protect branches and to require specific tests to pass before pull requests can be merged. You can set this up by visiting [https://github.com/USERNAME/REPO/settings/branches](https://github.com/USERNAME/REPO/settings/branches), selecting the branch you want to protect and then checking the approve-ci bot (the name is defined in the configuration file, see the next section), approval is needed before a request can be merged.
 
 [![Protected branches](http://i.imgur.com/bpEb9nU.png)](https://github.com/enkidevs/approve-ci/settings/branches)
 
