@@ -57,9 +57,11 @@ app.post('/', (req, res) => {
     case 'reopened':
     case 'synchronize':
       // Set status to 'pending'
+      const user = event.repository.owner.login
+      const repo = event.repository.name
       return setState({
-        user: event.pull_request.user.login,
-        repo: event.pull_request.repo.name,
+        user,
+        repo,
         sha: event.pull_request.head.sha,
         name: config.name,
         state: 'pending',
