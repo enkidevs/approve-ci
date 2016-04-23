@@ -71,12 +71,12 @@ export function getConfig () {
   })
 }
 
-export function setState ({sha, name, state, description}) {
+export function setState ({sha, name, state, description, repo = GITHUB_REPO, user = GITHUB_ORG}) {
   return new Promise((resolve, reject) => {
     console.log('set state')
     gh.statuses.create({
-      user: GITHUB_ORG,
-      repo: GITHUB_REPO,
+      user,
+      repo,
       sha,
       state,
       description,
@@ -86,24 +86,24 @@ export function setState ({sha, name, state, description}) {
   })
 }
 
-export function getComments (number) {
+export function getComments (number, user = GITHUB_ORG, repo = GITHUB_REPO) {
   return new Promise((resolve, reject) => {
     console.log('get comments')
     gh.issues.getComments({
-      user: GITHUB_ORG,
-      repo: GITHUB_REPO,
+      user,
+      repo,
       number,
       per_page: 100
     }, responseHandler(resolve, reject))
   })
 }
 
-export function getPullRequest (number) {
+export function getPullRequest (number, user = GITHUB_ORG, repo = GITHUB_REPO) {
   return new Promise((resolve, reject) => {
     console.log('get pull request')
     gh.pullRequests.get({
-      user: GITHUB_ORG,
-      repo: GITHUB_REPO,
+      user,
+      repo,
       number
     }, responseHandler(resolve, reject))
   })
