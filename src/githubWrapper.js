@@ -71,7 +71,7 @@ export function getConfig () {
   })
 }
 
-export function setState ({sha, name, state, description}) {
+export function setState ({sha, name, state, description, approvalLeft = ''}) {
   return new Promise((resolve, reject) => {
     console.log('set state')
     gh.statuses.create({
@@ -79,7 +79,7 @@ export function setState ({sha, name, state, description}) {
       repo: GITHUB_REPO,
       sha,
       state,
-      description,
+      description: description.replace('{{x}}', approvalLeft),
       context: name,
       target_url: 'https://github.com/enkidevs/approve-ci'
     }, responseHandler(resolve, reject))
