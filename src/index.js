@@ -57,7 +57,11 @@ app.post('/', (req, res) => {
     case 'reopened':
     case 'synchronize':
       // Set status to 'pending'
+      const user = event.repository.owner.login
+      const repo = event.repository.name
       return setState({
+        user,
+        repo,
         sha: event.pull_request.head.sha,
         name: config.name,
         state: 'pending',
@@ -75,11 +79,17 @@ app.post('/', (req, res) => {
     case 'deleted':
       // Fetch all comments from PR
       if ((event.issue || {}).pull_request) { // check if it's a comment on a PR
+        const user = event.repository.owner.login
+        const repo = event.repository.name
         return Promise.all([
-          getComments(event.issue.number),
-          getPullRequest(event.issue.number)
+          getComments(event.issue.number, user, repo),
+          getPullRequest(event.issue.number, user, repo)
         ]).then(checkApproved)
-          .then(setState)
+          .then((result) => setState({
+            ...result,
+            user,
+            repo
+          }))
           .then((response) => {
             res.status(200).send({success: true})
           })
