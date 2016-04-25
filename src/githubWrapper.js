@@ -71,11 +71,7 @@ export function getConfig () {
   })
 }
 
-<<<<<<< HEAD
-export function setState ({sha, name, state, description, repo = GITHUB_REPO, user = GITHUB_ORG}) {
-=======
-export function setState ({sha, name, state, description, approvalLeft = ''}) {
->>>>>>> master
+export function setState ({sha, name, state, description, approvalLeft = '', repo = GITHUB_REPO, user = GITHUB_ORG}) {
   return new Promise((resolve, reject) => {
     console.log('set state')
     gh.statuses.create({
