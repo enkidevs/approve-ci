@@ -9,7 +9,7 @@ const defaultConfig = {
   disapprovalStrings: ['👎', ':-1:', ':thumbsdown:'],
   approveString: 'The pull request was approved',
   rejectString: 'The pull request needs more work',
-  pendingString: 'Waiting for approval'
+  pendingString: 'Waiting for approval ({{x}} more needed)'
 }
 
 const config = defaultConfig
@@ -76,13 +76,15 @@ export function checkApproved ([comments, pr]) {
     state = 'failure'
     description = config.rejectString
   } else {
-    throw new Error('nothing to do')
+    state = 'pending'
+    description = config.pendingString
   }
 
   return {
     sha: pr.head.sha,
     name: config.name,
     state,
-    description
+    description,
+    approvalLeft: config.approvalCount - result
   }
 }

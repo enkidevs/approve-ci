@@ -24,7 +24,7 @@ test('Check configs merge', t => {
     disapprovalStrings: ['👎', ':-1:', ':thumbsdown:'],
     approveString: 'The pull request was approved',
     rejectString: 'The pull request needs more work',
-    pendingString: 'Waiting for approval'
+    pendingString: 'Waiting for approval ({{x}} more needed)'
   })
 })
 
@@ -33,6 +33,7 @@ test('Check request is approved', t => {
     sha: 'a085778b8f028205881c0bdbfc3772edc5563a3d',
     name: 'approve-test',
     state: 'failure',
-    description: 'The pull request needs more work'
+    description: 'The pull request needs more work',
+    approvalLeft: 2
   })
 })
