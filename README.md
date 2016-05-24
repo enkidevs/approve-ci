@@ -1,7 +1,7 @@
 # approve-ci
 
 [![build status](https://img.shields.io/travis/enkidevs/approve-ci/master.svg?style=flat-square)](https://travis-ci.org/enkidevs/approve-ci)
-[![Heroku](http://heroku-badge.herokuapp.com/?app=approve-ci&style=flat)]
+[![Heroku](http://heroku-badge.herokuapp.com/?app=approve-ci&style=flat)](http://approve-ci.herokuapp.com/)
 
 Approve-ci monitors pull requests and checks for approval. Once the number of approvals exceeds the number of disapprovals by a set amount the pull request is marked as 'approved' and is ready to merge.
 
