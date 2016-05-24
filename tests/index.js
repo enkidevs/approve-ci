@@ -4,7 +4,6 @@ import {mergeConfigs, checkApproved} from '../src/approval'
 
 const comments = require('./fixtures/comments.json')
 const content = require('./fixtures/content.json')
-const hooks = require('./fixtures/hooks.json')
 const pr = require('./fixtures/pr.json')
 
 const config = {
