@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import {testIfHookAlreadyExist, mergeConfigs, checkApproved} from '../src/approval'
+import {mergeConfigs, checkApproved} from '../src/approval'
 
 const comments = require('./fixtures/comments.json')
 const content = require('./fixtures/content.json')
@@ -16,15 +16,6 @@ const config = {
   rejectString: 'The pull request needs more work',
   pendingString: 'Waiting for approval ({{x}} more needed)'
 }
-
-test('Check for existing web hook', t => {
-  try {
-    testIfHookAlreadyExist(hooks)
-    t.fail()
-  } catch (e) {
-    t.pass()
-  }
-})
 
 test('Check configs merge', t => {
   return t.deepEqual(mergeConfigs(content), config)
