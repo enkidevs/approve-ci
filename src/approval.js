@@ -20,8 +20,9 @@ export function testIfHookAlreadyExist (hooks) {
   return URL
 }
 
-export function mergeConfigs (config, remoteConfig) {
-  if (remoteConfig) {
+export function mergeConfigs (remoteConfig) {
+  const config = defaultConfig
+  if (remoteConfig && remoteConfig.content) {
     var userConfig = JSON.parse(decode(remoteConfig.content))
     Object.keys(userConfig).forEach((key) => {
       if (Array.isArray(userConfig[key])) {
@@ -37,7 +38,7 @@ export function mergeConfigs (config, remoteConfig) {
 }
 
 export function checkApproved ([remoteConfig, comments, pr]) {
-  const config = mergeConfigs(defaultConfig, remoteConfig)
+  const config = mergeConfigs(remoteConfig)
 
   const commenters = comments
     .filter((comment) => comment.user.login !== pr.user.login)
