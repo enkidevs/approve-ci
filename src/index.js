@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 
 import {getHooks, createHook, getConfig, setState,
   getComments, getPullRequest} from './githubWrapper'
-import {testIfHookAlreadyExist, mergeConfigs, checkApproved} from './approval'
+import {testIfHookAlreadyExist, checkApproved, mergeConfigs} from './approval'
 
 const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
 
@@ -19,24 +19,12 @@ if (!GITHUB_TOKEN || !GITHUB_REPO || !GITHUB_ORG || !URL) {
   process.exit(1)
 }
 
-let config = {}
-
 // Existing hook?
 // If not, create one
 getHooks()
   .then(testIfHookAlreadyExist)
   .then(createHook)
   .catch((err) => console.log(err))
-
-// Retrieve configuration from repository
-// This is stored in .approve-ci found in the root directory
-getConfig()
-  .then(mergeConfigs)
-  .then((mergedConfig) => {
-    config = mergedConfig
-    console.log(config)
-  })
-  .catch((err) => console.error(err))
 
 const app = express()
 app.use(bodyParser.json())
@@ -59,14 +47,16 @@ app.post('/', (req, res) => {
       // Set status to 'pending'
       const user = event.repository.owner.login
       const repo = event.repository.name
-      return setState({
-        user,
-        repo,
-        sha: event.pull_request.head.sha,
-        name: config.name,
-        state: 'pending',
-        description: config.pendingString,
-        approvalLeft: config.approvalCount
+      return getConfig(user, repo).then(mergeConfigs).then((config) => {
+        return setState({
+          user,
+          repo,
+          sha: event.pull_request.head.sha,
+          name: config.name,
+          state: 'pending',
+          description: config.pendingString,
+          approvalLeft: config.approvalCount
+        })
       }).then((response) => {
         res.status(200).send({success: true})
       }).catch((err) => res.status(500).send(err))
@@ -82,6 +72,7 @@ app.post('/', (req, res) => {
         const user = event.repository.owner.login
         const repo = event.repository.name
         return Promise.all([
+          getConfig(user, repo),
           getComments(event.issue.number, user, repo),
           getPullRequest(event.issue.number, user, repo)
         ]).then(checkApproved)

@@ -61,7 +61,6 @@ export function createHook (url) {
 
 export function getConfig () {
   return new Promise((resolve, reject) => {
-    console.log('get config')
     gh.repos.getContent({
       user: GITHUB_ORG,
       repo: GITHUB_REPO,
@@ -73,7 +72,6 @@ export function getConfig () {
 
 export function setState ({sha, name, state, description, approvalLeft = '', repo = GITHUB_REPO, user = GITHUB_ORG}) {
   return new Promise((resolve, reject) => {
-    console.log('set state')
     gh.statuses.create({
       user,
       repo,

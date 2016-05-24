@@ -6,28 +6,20 @@ Approve-ci monitors pull requests and checks for approval. Once the number of ap
 
 ![approve-ci in use](http://i.imgur.com/2aMhuzk.png)
 
-## Deployment
+## How To Use?
 
-To run an approve-ci bot clone this repository, modify `.approve-ci` and deploy your application. You must set a GitHub organisation, repository and an API [token](https://github.com/settings/tokens) with `repo` rights as environment variables, along with the URL of your deployment.
+- Go to
+ - your project on GitHub > Settings > Webhooks & services > Add Webhook or
+ - your organization on GitHub > Settings > Webhooks > Add Webhook
+- Payload URL: (https://approve-ci.herokuapp.com/)
+- Let me select individual events > Check `repo`
+- Add Webhook
 
-```
-  export GITHUB_TOKEN='f7c41472410cacded24090d24f70e98995d8dc55'
-  export GITHUB_REPO='approve-ci'
-  export GITHUB_ORG='enkidevs'
-  export URL='http://approve-ci.herokuapp.com/'
-```
-
-Alternatively you can deploy the bot using Heroku by pressing the button below:
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
-GitHub allows you protect branches and to require specific tests to pass before pull requests can be merged. You can set this up by visiting [https://github.com/USERNAME/REPO/settings/branches](https://github.com/USERNAME/REPO/settings/branches), selecting the branch you want to protect and then checking the approve-ci bot (the name is defined in the configuration file, see the next section), approval is needed before a request can be merged.
-
-[![Protected branches](http://i.imgur.com/bpEb9nU.png)](https://github.com/enkidevs/approve-ci/settings/branches)
+And you are done. Next time a pull request is opened, you should see the pending status from approve-ci ;)
 
 ## Configuration
 
-An example `.approve-ci` file, using :thumbsup: to approve and :thumbsdown: to disapprove, is given below. When using emojis you must use [encodeURIComponent](http://pressbin.com/tools/urlencode_urldecode/).
+The bot can be configured by adding a `.approve-ci` file to the base directory of the repo. Here's a list of the possible options:
 
 ```
 {
@@ -40,3 +32,31 @@ An example `.approve-ci` file, using :thumbsup: to approve and :thumbsdown: to d
   "pendingString": "Waiting for approval"
 }
 ```
+
+When using emojis you must [URI encodeURI](http://pressbin.com/tools/urlencode_urldecode/) them (as shown above for :thumbsup: and :thumbsdown:).
+
+## Protected branches
+
+GitHub allows you protect branches and to require specific tests to pass before pull requests can be merged. You can set this up by visiting [https://github.com/USERNAME/REPO/settings/branches](https://github.com/USERNAME/REPO/settings/branches), selecting the branch you want to protect and then checking the approve-ci bot (the name is defined in the configuration file, see the next section), approval is needed before a request can be merged.
+
+[![Protected branches](http://i.imgur.com/bpEb9nU.png)](https://github.com/enkidevs/approve-ci/settings/branches)
+
+## How To Contribute or Run Your Own Bot?
+
+If you want to use a different account for the bot, change the message or extend it with more functionalities, we've tried to make it super easy:
+
+```bash
+git clone https://github.com/enkidevs/approve-ci.git
+cd approve-ci
+npm install
+npm start
+# Follow the instructions there
+```
+
+Alternatively you can deploy the bot using Heroku by pressing the button below:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+## License
+
+  MIT

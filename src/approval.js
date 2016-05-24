@@ -12,8 +12,6 @@ const defaultConfig = {
   pendingString: 'Waiting for approval ({{x}} more needed)'
 }
 
-const config = defaultConfig
-
 export function testIfHookAlreadyExist (hooks) {
   const hook = (hooks || []).find((hook) => hook.config.url === URL)
   if (hook) {
@@ -22,7 +20,7 @@ export function testIfHookAlreadyExist (hooks) {
   return URL
 }
 
-export function mergeConfigs (remoteConfig) {
+export function mergeConfigs (config, remoteConfig) {
   if (remoteConfig) {
     var userConfig = JSON.parse(decode(remoteConfig.content))
     Object.keys(userConfig).forEach((key) => {
@@ -38,7 +36,9 @@ export function mergeConfigs (remoteConfig) {
   return config
 }
 
-export function checkApproved ([comments, pr]) {
+export function checkApproved ([remoteConfig, comments, pr]) {
+  const config = mergeConfigs(defaultConfig, remoteConfig)
+
   const commenters = comments
     .filter((comment) => comment.user.login !== pr.user.login)
     .reduce((ret, comment) => {
