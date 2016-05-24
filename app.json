@@ -5,20 +5,8 @@
   "logo": "https://avatars3.githubusercontent.com/u/18580415",
   "keywords": ["node", "express", "github", "pull requests"],
   "env": {
-    "GITHUB_ORG": {
-      "description": "The GitHub account or organisation of the repository (i.e. enkidevs)",
-      "required": true
-    },
-    "GITHUB_REPO": {
-      "description": "The GitHub repository to monitor pull requests for (i.e. approve-ci)",
-      "required": true
-    },
     "GITHUB_TOKEN": {
-      "description": "A token generated for the account which will comment on your pull requests (i.e. f7c41472410cacded24090d24f70e98995d8dc55)",
-      "required": true
-    },
-    "URL": {
-      "description": "The URL of this deployment (i.e. approve-ci.herokuapp.com)",
+      "description": "A token generated for the account which will comment on your pull requests (i.e. f7c41472410cacded24090d24f70e98995d8dc55) (needs the `repo` rights)",
       "required": true
     }
   }
