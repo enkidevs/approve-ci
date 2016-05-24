@@ -1,7 +1,5 @@
 import {decode} from 'base-64'
 
-const {URL} = process.env
-
 const defaultConfig = {
   name: 'approve-ci',
   approvalCount: 1,
@@ -10,14 +8,6 @@ const defaultConfig = {
   approveString: 'The pull request was approved',
   rejectString: 'The pull request needs more work',
   pendingString: 'Waiting for approval ({{x}} more needed)'
-}
-
-export function testIfHookAlreadyExist (hooks) {
-  const hook = (hooks || []).find((hook) => hook.config.url === URL)
-  if (hook) {
-    throw new Error('already defined')
-  }
-  return URL
 }
 
 export function mergeConfigs (remoteConfig) {

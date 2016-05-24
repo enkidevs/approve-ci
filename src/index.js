@@ -1,13 +1,12 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 
-import {getHooks, createHook, getConfig, setState,
-  getComments, getPullRequest} from './githubWrapper'
-import {testIfHookAlreadyExist, checkApproved, mergeConfigs} from './approval'
+import {getConfig, setState, getComments, getPullRequest} from './githubWrapper'
+import {checkApproved, mergeConfigs} from './approval'
 
-const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG, URL} = process.env
+const {GITHUB_TOKEN} = process.env
 
-if (!GITHUB_TOKEN || !GITHUB_REPO || !GITHUB_ORG || !URL) {
+if (!GITHUB_TOKEN) {
   console.error('The ci was started without env variables')
   console.error('To get started:')
   if (!GITHUB_TOKEN) {
@@ -15,23 +14,17 @@ if (!GITHUB_TOKEN || !GITHUB_REPO || !GITHUB_ORG || !URL) {
     console.error('* Create a new token with the repo rights')
   }
   console.error('* Run the following command:')
-  console.error('GITHUB_TOKEN=insert_github_token_here GITHUB_REPO=insert_github_repo_here GITHUB_ORG=insert_github_username_here URL=insert_url_here npm start')
+  console.error('GITHUB_TOKEN=insert_github_token_here npm start')
   process.exit(1)
 }
-
-// Existing hook?
-// If not, create one
-getHooks()
-  .then(testIfHookAlreadyExist)
-  .then(createHook)
-  .catch((err) => console.log(err))
 
 const app = express()
 app.use(bodyParser.json())
 
 // Default app-alive message
 app.get('/', (req, res) => {
-  res.send('Hello, world!')
+  res.send('Approve CI Active. ' +
+    'Go to https://github.com/enkidevs/approve-ci for more information.')
 })
 
 // Handler hook event

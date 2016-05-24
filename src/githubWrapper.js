@@ -1,6 +1,6 @@
 import GithubAPI from 'github'
 
-const {GITHUB_TOKEN, GITHUB_REPO, GITHUB_ORG} = process.env
+const {GITHUB_TOKEN} = process.env
 
 const headers = {
   'user-agent': 'approve-ci-bot'
@@ -31,46 +31,18 @@ function responseHandler (resolve, reject) {
   }
 }
 
-export function getHooks () {
-  return new Promise((resolve, reject) => {
-    console.log('get hooks')
-    gh.repos.getHooks({
-      user: GITHUB_ORG,
-      repo: GITHUB_REPO
-    }, responseHandler(resolve, reject))
-  })
-}
-
-export function createHook (url) {
-  return new Promise((resolve, reject) => {
-    console.log('create hook')
-    gh.repos.createHook({
-      user: GITHUB_ORG,
-      repo: GITHUB_REPO,
-      headers,
-      name: 'web',
-      active: true,
-      config: {
-        url,
-        content_type: 'json'
-      },
-      events: ['pull_request', 'issue_comment']
-    }, responseHandler(resolve, reject))
-  })
-}
-
-export function getConfig () {
+export function getConfig (user, repo) {
   return new Promise((resolve, reject) => {
     gh.repos.getContent({
-      user: GITHUB_ORG,
-      repo: GITHUB_REPO,
+      user,
+      repo,
       headers,
       path: '.approve-ci'
     }, responseHandler(resolve, reject))
   })
 }
 
-export function setState ({sha, name, state, description, approvalLeft = '', repo = GITHUB_REPO, user = GITHUB_ORG}) {
+export function setState ({sha, name, state, description, approvalLeft = '', repo, user}) {
   return new Promise((resolve, reject) => {
     gh.statuses.create({
       user,
@@ -84,7 +56,7 @@ export function setState ({sha, name, state, description, approvalLeft = '', rep
   })
 }
 
-export function getComments (number, user = GITHUB_ORG, repo = GITHUB_REPO) {
+export function getComments (number, user, repo) {
   return new Promise((resolve, reject) => {
     console.log('get comments')
     gh.issues.getComments({
@@ -96,7 +68,7 @@ export function getComments (number, user = GITHUB_ORG, repo = GITHUB_REPO) {
   })
 }
 
-export function getPullRequest (number, user = GITHUB_ORG, repo = GITHUB_REPO) {
+export function getPullRequest (number, user, repo) {
   return new Promise((resolve, reject) => {
     console.log('get pull request')
     gh.pullRequests.get({
