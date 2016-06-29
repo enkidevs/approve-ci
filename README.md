@@ -58,6 +58,13 @@ Alternatively you can deploy the bot using Heroku by pressing the button below:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+Or you can build and deploy on your servers using Docker:
+
+```bash
+docker build -t approve-ci .
+docker run -d -p 80:3000 -e GITHUB_TOKEN=<YOUR_GITHUB_TOKEN_HERE> approve-ci
+``` 
+
 ## License
 
   MIT
