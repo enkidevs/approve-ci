@@ -44,7 +44,7 @@ GitHub allows you protect branches and to require specific tests to pass before 
 
 ## How To Contribute or Run Your Own Bot?
 
-If you want to use a different account for the bot, change the message or extend it with more functionalities, we've tried to make it super easy:
+If you want to use a different account for the bot, change the message or extend it to provide additional functionality, we've tried to make it super easy:
 
 ```bash
 git clone https://github.com/enkidevs/approve-ci.git
