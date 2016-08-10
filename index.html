@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Approve-ci by enkidevs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Approve-ci</h1>
+      <h2 class="project-tagline">Automate your pull request approvals.</h2>
+      <a href="https://github.com/enkidevs/approve-ci" class="btn">View on GitHub</a>
+      <a href="https://github.com/enkidevs/approve-ci/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/enkidevs/approve-ci/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="approve-ci" class="anchor" href="#approve-ci" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Approve-CI</h1>
+
+<p>Approve-CI is a continuous integration tool that monitors pull requests made on GitHub and checks for approval from the rest of your team. The tool watches the comments made on your request for pre-configured ‘approve’ or ‘disapprove’ messages: when your team has reviewed the code and the number of approvals exceeds the number of disapprovals by a set amount, the check passes and request can be merged.</p>
+
+<p><img src="http://i.imgur.com/2aMhuzk.png" alt="approve-ci in use"></p>
+
+<p>What’s the purpose? Well, at <a href="https://enki.com/">Enki</a> we review all of our code changes using pull requests, only merging changes when they are approved by the other devs. We decided to formalise this (and save ourselves some work) by creating a bot. The review status of new features, bug fixes and other changes are now immediately obvious - and any accidental merges left by the wayside.</p>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How To Use?</h2>
+
+<p>Do you want to use it? Adding the tool to your repository is easy: just add a Webhook to your account or organisation, point the trigger at our deployment, and select the appropriate events!</p>
+
+<ul>
+<li>Go to
+
+<ul>
+<li>your <em>project</em> on GitHub &gt; Settings &gt; Webhooks &amp; services &gt; Add Webhook or</li>
+<li>your <em>organization</em> on GitHub &gt; Settings &gt; Webhooks &gt; Add Webhook</li>
+</ul>
+</li>
+<li>Set the payload URL to <code>https://approve-ci.herokuapp.com/</code>
+</li>
+<li>Let me select individual events &gt; Check <code>repo</code>
+</li>
+<li>Add Webhook</li>
+</ul>
+
+<p>And you are done! Next time a pull request is opened, you should see the pending status from approve-ci ;)</p>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>The tool can be configured by adding a <code>.approve-ci</code> file to the base directory of the repo. Here's a list of the possible options:</p>
+
+<pre><code>{
+  "name": "approve-ci",
+  "approvalCount": 1,
+  "approvalStrings": ["%F0%9F%91%8D", ":+1:", ":thumbsup:"],
+  "disapprovalStrings": ["%F0%9F%91%8E", ":-1:", ":thumbsdown:"],
+  "approveString": "The pull request was approved",
+  "rejectString": "The pull request needs more work",
+  "pendingString": "Waiting for approval"
+}
+</code></pre>
+
+<p>When using emojis you must <a href="http://pressbin.com/tools/urlencode_urldecode/">URI encodeURI</a> them (as shown above for <g-emoji alias="+1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png">👍</g-emoji> and <g-emoji alias="-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44e.png">👎</g-emoji>).</p>
+
+<h2>
+<a id="protected-branches" class="anchor" href="#protected-branches" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Protected branches</h2>
+
+<p>GitHub allows you protect branches and to require specific tests to pass before pull requests can be merged. You can set this up by visiting <a href="https://github.com/USERNAME/REPO/settings/branches">https://github.com/USERNAME/REPO/settings/branches</a>, selecting the branch you want to protect and then checking the approve-ci bot (the name is defined in the configuration file, see the next section), approval is needed before a request can be merged.</p>
+
+<p><a href="https://github.com/enkidevs/approve-ci/settings/branches"><img src="http://i.imgur.com/bpEb9nU.png" alt="Protected branches"></a></p>
+
+<h2>
+<a id="how-to-contribute-or-run-your-own" class="anchor" href="#how-to-contribute-or-run-your-own" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How To Contribute or Run Your Own?</h2>
+
+<p>Approve-CI is also super-customisable and hacker-friendly! If you want to tinker, the tool can be deployed in a few clicks using Heroku, deployed locally or containerised using Docker. If you want to use a different account for the tool, change the message or extend it with more functionalities, we've tried to make it super easy:</p>
+
+<div class="highlight highlight-source-shell"><pre>git clone https://github.com/enkidevs/approve-ci.git
+<span class="pl-c1">cd</span> approve-ci
+npm install
+npm start
+<span class="pl-c"># Follow the instructions there</span></pre></div>
+
+<p>Alternatively you can deploy the tool using Heroku by pressing the button below:</p>
+
+<p><a href="https://heroku.com/deploy"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy"></a></p>
+
+<p>Or you can build and deploy on your servers using Docker:</p>
+
+<div class="highlight highlight-source-shell"><pre>docker build -t approve-ci <span class="pl-c1">.</span>
+docker run -d -p 80:3000 -e GITHUB_TOKEN=<span class="pl-k">&lt;</span>YOUR_GITHUB_TOKEN_HERE<span class="pl-k">&gt;</span> approve-ci</pre></div>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>Approve-CI is available under the MIT license.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/enkidevs/approve-ci">Approve-ci</a> is maintained by <a href="https://github.com/enkidevs">enkidevs</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
