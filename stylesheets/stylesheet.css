@@ -235,19 +235,22 @@ a {
 
 .site-footer-owner-text {
   display: inline-block;
+  float: left;
 }
 
 .site-footer-owner-buttons {
   display: inline-block;
-  float: right;
-  width: calc(135px * 2 + 35px);
+  float: left;
   text-align: right;
 }
 
 .itunes-link, .playstore-link {
   display: inline-block;
-  margin-left: 15px;
   z-index: 1000;
+}
+
+.playstore-link {
+  margin-left: 15px;
 }
 
 .playstore-link img, .itunes-link img {
@@ -276,6 +279,12 @@ a {
     padding-left: 6rem;
     padding-right: 6rem;
   }
+  .site-footer-owner-text {
+    width: 60%;
+  }
+  .site-footer-owner-buttons {
+    width: 40%;
+  }
 }
 
 @media screen and (min-width: 42em) and (max-width: 64em) {
@@ -285,6 +294,17 @@ a {
   .site-footer-owner-content, .site-footer-credits-content {
     padding-left: 4rem;
     padding-right: 4rem;
+  }
+  .site-footer-owner {
+    min-height: 165px;
+  }
+  .site-footer-owner-text {
+    width: 100%;
+  }
+  .site-footer-owner-buttons {
+    width: 100%;
+    text-align: left;
+    margin-top: 15px;
   }
 }
 
@@ -296,7 +316,15 @@ a {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+  .site-footer-owner {
+    min-height: 165px;
+  }
+  .site-footer-owner-text {
+    width: 100%;
+  }
   .site-footer-owner-buttons {
-    display: none;
+    width: 100%;
+    text-align: left;
+    margin-top: 15px;
   }
 }
