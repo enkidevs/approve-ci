@@ -233,6 +233,27 @@ a {
   background-clip: border-box;
   background-color: #F5F5F5; }
 
+.site-footer-owner-text {
+  display: inline-block;
+}
+
+.site-footer-owner-buttons {
+  display: inline-block;
+  float: right;
+  width: calc(135px * 2 + 35px);
+  text-align: right;
+}
+
+.itunes-link, .playstore-link {
+  display: inline-block;
+  margin-left: 15px;
+  z-index: 1000;
+}
+
+.playstore-link img, .itunes-link img {
+  width: 135px;
+}
+
 .site-footer-credits {
   display: block;
   padding: 15px 0;
@@ -274,5 +295,8 @@ a {
   .site-footer-owner-content, .site-footer-credits-content {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  .site-footer-owner-buttons {
+    display: none;
   }
 }
